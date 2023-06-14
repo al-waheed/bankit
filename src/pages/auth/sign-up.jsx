@@ -14,17 +14,30 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export function SignUp() {
+
+  const generateAccountNumber = (min, max) => {
+    const randomInteger = Math.floor(Math.random() * (max - min + 1)) + min;
+    return `00${randomInteger}`.slice(-10);
+  };
+
   const [inputVal, setInputVal] = useState({
     name: "",
     email: "",
     password: "",
+    accountNo: "",
   });
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   const history = useNavigate();
 
   const getData = (e) => {
     const { value, name } = e.target;
-    
+
     setInputVal(() => {
       return {
         ...inputVal,
@@ -35,6 +48,17 @@ export function SignUp() {
 
   const addData = (e) => {
     e.preventDefault();
+
+    const accountNumber = generateAccountNumber(0, 99999999);
+
+    const existingUserData = localStorage.getItem("user_signUp");
+    let userData = [];
+
+    if (existingUserData) {
+      userData = JSON.parse(existingUserData);
+    }
+
+    const existEmails = userData.map((user) => user.email);
 
     const { name, email, password } = inputVal;
 
@@ -50,6 +74,10 @@ export function SignUp() {
       toast.error("Please enter a valid email address", {
         position: "top-center",
       });
+    } else if (existEmails.includes(email)) {
+      toast.error("Email already exist", {
+        position: "top-center",
+      });
     } else if (password === "") {
       toast.error("Password field is required", {
         position: "top-center",
@@ -59,16 +87,13 @@ export function SignUp() {
         position: "top-center",
       });
     } else {
-      console.log("Data Added Succesfully");
-      history("/auth/sign-in");
-      const existingUserData = localStorage.getItem("user_signUp");
-      let userData = [];
-
-      if (existingUserData) {
-        userData = JSON.parse(existingUserData);
-      }
-      userData.push(inputVal);
+      const userDataObject = {
+        ...inputVal,
+      accountNo: accountNumber,
+      };
+      userData.push(userDataObject);
       localStorage.setItem("user_signUp", JSON.stringify(userData));
+      history("/auth/sign-in");
     }
   };
 
@@ -106,13 +131,31 @@ export function SignUp() {
                 size="lg"
                 onChange={getData}
               />
-              <Input
-                type="password"
-                name="password"
-                label="Password"
-                size="lg"
-                onChange={getData}
-              />
+              <div className="relative flex w-full max-w-[24rem]">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  label="Password"
+                  size="lg"
+                  onChange={getData}
+                  containerProps={{
+                    className: "min-w-0",
+                  }}
+                />
+                <Button
+                  onClick={toggleShowPassword}
+                  variant="text"
+                  size="sm"
+                  className="!absolute right-1 top-1 rounded"
+                >
+                  {showPassword ? (
+                    <img src="/public/img/show-password.png" />
+                  ) : (
+                    <img src="/public/img/hide-password.png" />
+                  )}
+                </Button>
+              </div>
+
               <div className="-ml-2.5">
                 <Checkbox label="I agree the Terms and Conditions" />
               </div>

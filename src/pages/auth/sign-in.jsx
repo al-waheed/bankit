@@ -36,15 +36,14 @@ export function SignIn() {
     e.preventDefault();
 
     const signUpUser = localStorage.getItem("user_signUp");
-    console.log(signUpUser);
 
     const { email, password } = inputVal;
     if (email === "") {
-      toast.error("email field is requred", {
+      toast.error("Email field is required", {
         position: "top-center",
       });
     } else if (!email.includes("@")) {
-      toast.error("plz enter valid email address", {
+      toast.error("Please enter a valid email address", {
         position: "top-center",
       });
     } else if (password === "") {
@@ -67,9 +66,8 @@ export function SignIn() {
             position: "top-center",
           });
         } else {
-          console.log("User Login Succesfully");
-          history("/dashboard/home");
           localStorage.setItem("user_signIn", JSON.stringify(usersLogin));
+          history("/dashboard/home");
         }
       }
     }
