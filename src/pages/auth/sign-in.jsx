@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Card,
   CardHeader,
@@ -9,8 +9,72 @@ import {
   Button,
   Typography,
 } from "@material-tailwind/react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useState } from "react";
 
 export function SignIn() {
+  const [inputVal, setInputVal] = useState({
+    email: "",
+    password: "",
+  });
+
+  const history = useNavigate();
+
+  const getData = (e) => {
+    const { value, name } = e.target;
+
+    setInputVal(() => {
+      return {
+        ...inputVal,
+        [name]: value,
+      };
+    });
+  };
+
+  const addData = (e) => {
+    e.preventDefault();
+
+    const signUpUser = localStorage.getItem("user_signUp");
+    console.log(signUpUser);
+
+    const { email, password } = inputVal;
+    if (email === "") {
+      toast.error("email field is requred", {
+        position: "top-center",
+      });
+    } else if (!email.includes("@")) {
+      toast.error("plz enter valid email address", {
+        position: "top-center",
+      });
+    } else if (password === "") {
+      toast.error("password field is required", {
+        position: "top-center",
+      });
+    } else if (password.length < 5) {
+      toast.error("password length greater than five", {
+        position: "top-center",
+      });
+    } else {
+      if (signUpUser && signUpUser.length) {
+        const signUpUsersDetails = JSON.parse(signUpUser);
+        const usersLogin = signUpUsersDetails.filter((el, k) => {
+          return el.email === email && el.password === password;
+        });
+
+        if (usersLogin.length === 0) {
+          toast.warn("invalid details", {
+            position: "top-center",
+          });
+        } else {
+          console.log("User Login Succesfully");
+          history("/dashboard/home");
+          localStorage.setItem("user_signIn", JSON.stringify(usersLogin));
+        }
+      }
+    }
+  };
+
   return (
     <>
       <img
@@ -29,32 +93,52 @@ export function SignIn() {
               Sign In
             </Typography>
           </CardHeader>
-          <CardBody className="flex flex-col gap-4">
-            <Input type="email" label="Email" size="lg" />
-            <Input type="password" label="Password" size="lg" />
-            <div className="-ml-2.5">
-              <Checkbox label="Remember Me" />
-            </div>
-          </CardBody>
-          <CardFooter className="pt-0">
-            <Button variant="gradient" fullWidth>
-              Sign In
-            </Button>
-            <Typography variant="small" className="mt-6 flex justify-center">
-              Don't have an account?
-              <Link to="/auth/sign-up">
-                <Typography
-                  as="span"
-                  variant="small"
-                  color="blue"
-                  className="ml-1 font-bold"
-                >
-                  Sign up
-                </Typography>
-              </Link>
-            </Typography>
-          </CardFooter>
+          <form>
+            <CardBody className="flex flex-col gap-4">
+              <Input
+                type="email"
+                label="Email"
+                name="email"
+                size="lg"
+                onChange={getData}
+              />
+              <Input
+                type="password"
+                label="Password"
+                name="password"
+                size="lg"
+                onChange={getData}
+              />
+              <div className="-ml-2.5">
+                <Checkbox label="Remember Me" />
+              </div>
+            </CardBody>
+            <CardFooter className="pt-0">
+              <Button
+                type="submit"
+                variant="gradient"
+                onClick={addData}
+                fullWidth
+              >
+                Sign In
+              </Button>
+              <Typography variant="small" className="mt-6 flex justify-center">
+                Don't have an account?
+                <Link to="/auth/sign-up">
+                  <Typography
+                    as="span"
+                    variant="small"
+                    color="blue"
+                    className="ml-1 font-bold"
+                  >
+                    Sign up
+                  </Typography>
+                </Link>
+              </Typography>
+            </CardFooter>
+          </form>
         </Card>
+        <ToastContainer />
       </div>
     </>
   );

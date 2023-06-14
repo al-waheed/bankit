@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import {
   Card,
   CardHeader,
@@ -9,8 +10,68 @@ import {
   Button,
   Typography,
 } from "@material-tailwind/react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export function SignUp() {
+  const [inputVal, setInputVal] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+
+  const history = useNavigate();
+
+  const getData = (e) => {
+    const { value, name } = e.target;
+    
+    setInputVal(() => {
+      return {
+        ...inputVal,
+        [name]: value,
+      };
+    });
+  };
+
+  const addData = (e) => {
+    e.preventDefault();
+
+    const { name, email, password } = inputVal;
+
+    if (name === "") {
+      toast.error("Name field is required!", {
+        position: "top-center",
+      });
+    } else if (email === "") {
+      toast.error("Email field is required", {
+        position: "top-center",
+      });
+    } else if (!email.includes("@")) {
+      toast.error("Please enter a valid email address", {
+        position: "top-center",
+      });
+    } else if (password === "") {
+      toast.error("Password field is required", {
+        position: "top-center",
+      });
+    } else if (password.length < 5) {
+      toast.error("Password length should be greater than five", {
+        position: "top-center",
+      });
+    } else {
+      console.log("Data Added Succesfully");
+      history("/auth/sign-in");
+      const existingUserData = localStorage.getItem("user_signUp");
+      let userData = [];
+
+      if (existingUserData) {
+        userData = JSON.parse(existingUserData);
+      }
+      userData.push(inputVal);
+      localStorage.setItem("user_signUp", JSON.stringify(userData));
+    }
+  };
+
   return (
     <>
       <img
@@ -29,33 +90,59 @@ export function SignUp() {
               Sign Up
             </Typography>
           </CardHeader>
-          <CardBody className="flex flex-col gap-4">
-            <Input label="Name" size="lg" />
-            <Input type="email" label="Email" size="lg" />
-            <Input type="password" label="Password" size="lg" />
-            <div className="-ml-2.5">
-              <Checkbox label="I agree the Terms and Conditions" />
-            </div>
-          </CardBody>
-          <CardFooter className="pt-0">
-            <Button variant="gradient" fullWidth>
-              Sign Up
-            </Button>
-            <Typography variant="small" className="mt-6 flex justify-center">
-              Already have an account?
-              <Link to="/auth/sign-in">
-                <Typography
-                  as="span"
-                  variant="small"
-                  color="blue"
-                  className="ml-1 font-bold"
-                >
-                  Sign in
-                </Typography>
-              </Link>
-            </Typography>
-          </CardFooter>
+          <form>
+            <CardBody className="flex flex-col gap-4">
+              <Input
+                type="text"
+                name="name"
+                label="Name"
+                size="lg"
+                onChange={getData}
+              />
+              <Input
+                type="email"
+                name="email"
+                label="Email"
+                size="lg"
+                onChange={getData}
+              />
+              <Input
+                type="password"
+                name="password"
+                label="Password"
+                size="lg"
+                onChange={getData}
+              />
+              <div className="-ml-2.5">
+                <Checkbox label="I agree the Terms and Conditions" />
+              </div>
+            </CardBody>
+            <CardFooter className="pt-0">
+              <Button
+                type="submit"
+                variant="gradient"
+                onClick={addData}
+                fullWidth
+              >
+                Sign Up
+              </Button>
+              <Typography variant="small" className="mt-6 flex justify-center">
+                Already have an account?
+                <Link to="/auth/sign-in">
+                  <Typography
+                    as="span"
+                    variant="small"
+                    color="blue"
+                    className="ml-1 font-bold"
+                  >
+                    Sign in
+                  </Typography>
+                </Link>
+              </Typography>
+            </CardFooter>
+          </form>
         </Card>
+        <ToastContainer />
       </div>
     </>
   );
