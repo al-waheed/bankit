@@ -14,11 +14,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export function SignUp() {
-  const generateAccountNumber = (min, max) => {
-    const randomInteger = Math.floor(Math.random() * (max - min + 1)) + min;
-    return `00${randomInteger}`.slice(-10);
-  };
-
+  const history = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
   const [inputVal, setInputVal] = useState({
     name: "",
     email: "",
@@ -26,13 +23,14 @@ export function SignUp() {
     accountNo: "",
   });
 
-  const [showPassword, setShowPassword] = useState(false);
+  const generateAccountNumber = (min, max) => {
+    const randomInteger = Math.floor(Math.random() * (max - min + 1)) + min;
+    return `00${randomInteger}`.slice(-10);
+  };
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
-
-  const history = useNavigate();
 
   const getData = (e) => {
     const { value, name } = e.target;
@@ -153,7 +151,6 @@ export function SignUp() {
                   )}
                 </span>
               </div>
-
               <div className="-ml-2.5">
                 <Checkbox label="I agree the Terms and Conditions" />
               </div>

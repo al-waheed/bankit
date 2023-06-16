@@ -19,6 +19,12 @@ export function SignIn() {
     password: "",
   });
 
+  const [showPassword, setShowPassword] = useState(false);
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   const history = useNavigate();
 
   const getData = (e) => {
@@ -47,11 +53,11 @@ export function SignIn() {
         position: "top-center",
       });
     } else if (password === "") {
-      toast.error("password field is required", {
+      toast.error("Password field is required", {
         position: "top-center",
       });
     } else if (password.length < 5) {
-      toast.error("password length greater than five", {
+      toast.error("Password length greater than five", {
         position: "top-center",
       });
     } else {
@@ -100,13 +106,29 @@ export function SignIn() {
                 size="lg"
                 onChange={getData}
               />
-              <Input
-                type="password"
-                label="Password"
-                name="password"
-                size="lg"
-                onChange={getData}
-              />
+              <div className="relative flex w-full max-w-[24rem]">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  label="Password"
+                  size="lg"
+                  onChange={getData}
+                  containerProps={{
+                    className: "min-w-0",
+                  }}
+                />
+                <span
+                  onClick={toggleShowPassword}
+                  size="sm"
+                  className="!absolute right-1 top-3.5 mr-1 cursor-pointer"
+                >
+                  {showPassword ? (
+                    <img src="/public/img/show-password.png" />
+                  ) : (
+                    <img src="/public/img/hide-password.png" />
+                  )}
+                </span>
+              </div>
               <div className="-ml-2.5">
                 <Checkbox label="Remember Me" />
               </div>
