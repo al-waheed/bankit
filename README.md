@@ -19,7 +19,7 @@ material-tailwind-dashboard-react
     │   └── routes.jsx
     ├── .gitignore
     ├── index.html
-    ├── jsconfig.json
+    ├── package.lock.json
     ├── package.json
     ├── postcsss.config.cjs
     ├── prettier.config.cjs
