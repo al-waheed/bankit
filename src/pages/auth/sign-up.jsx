@@ -14,7 +14,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export function SignUp() {
-
   const generateAccountNumber = (min, max) => {
     const randomInteger = Math.floor(Math.random() * (max - min + 1)) + min;
     return `00${randomInteger}`.slice(-10);
@@ -89,7 +88,7 @@ export function SignUp() {
     } else {
       const userDataObject = {
         ...inputVal,
-      accountNo: accountNumber,
+        accountNo: accountNumber,
       };
       userData.push(userDataObject);
       localStorage.setItem("user_signUp", JSON.stringify(userData));
@@ -142,18 +141,17 @@ export function SignUp() {
                     className: "min-w-0",
                   }}
                 />
-                <Button
+                <span
                   onClick={toggleShowPassword}
-                  variant="text"
                   size="sm"
-                  className="!absolute right-1 top-1 rounded"
+                  className="!absolute right-1 top-3.5 mr-1 cursor-pointer"
                 >
                   {showPassword ? (
                     <img src="/public/img/show-password.png" />
                   ) : (
                     <img src="/public/img/hide-password.png" />
                   )}
-                </Button>
+                </span>
               </div>
 
               <div className="-ml-2.5">
