@@ -145,9 +145,9 @@ export function SignUp() {
                   className="!absolute right-1 top-3.5 mr-1 cursor-pointer"
                 >
                   {showPassword ? (
-                    <img src="/public/img/show-password.png" />
+                    <img src="/img/show-password.png" />
                   ) : (
-                    <img src="/public/img/hide-password.png" />
+                    <img src="/img/hide-password.png" />
                   )}
                 </span>
               </div>
