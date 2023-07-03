@@ -1,4 +1,4 @@
-import { useLocation, Link, useNavigate } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import {
   Navbar,
   Typography,
@@ -20,13 +20,6 @@ export function DashboardNavbar() {
   const { fixedNavbar, openSidenav } = controller;
   const { pathname } = useLocation();
   const [layout, page] = pathname.split("/").filter((el) => el !== "");
-
-  const history = useNavigate();
-
-  const userLogOut = () => {
-    localStorage.removeItem("user_signIn");
-    history("/auth/sign-in");
-  };
 
   return (
     <Navbar
@@ -79,28 +72,6 @@ export function DashboardNavbar() {
           >
             <Bars3Icon strokeWidth={3} className="h-6 w-6 text-blue-gray-500" />
           </IconButton>
-          <Link to="/auth/sign-in">
-            <Button
-              variant="gradient"
-              className="hidden items-center gap-1 px-4 xl:flex"
-              onClick={userLogOut}
-            >
-              Log Out
-            </Button>
-            <IconButton
-              variant="text"
-              color="blue-gray"
-              className="grid xl:hidden"
-            >
-              <Button
-                variant="gradient"
-                className="items-center gap-1 px-4 xl:flex"
-                onClick={userLogOut}
-              >
-                Log Out
-              </Button>
-            </IconButton>
-          </Link>
         </div>
       </div>
     </Navbar>

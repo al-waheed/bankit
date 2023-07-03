@@ -18,6 +18,11 @@ export function Sidenav({ brandImg, brandName, routes }) {
     transparent: "bg-transparent",
   };
 
+  const userLogOut = () => {
+    localStorage.removeItem("user_signIn");
+    history("/auth/sign-in");
+  };
+
   return (
     <aside
       className={`${sidenavTypes[sidenavType]} ${
@@ -85,6 +90,19 @@ export function Sidenav({ brandImg, brandName, routes }) {
             ))}
           </ul>
         ))}
+        <div className="">
+          <Link to="/auth/sign-in">
+            <Button
+              variant="gradient"
+              className="gap-4 px-4"
+              onClick={userLogOut}
+            >
+              <Typography color="inherit" className="font-medium capitalize">
+                Log Out
+              </Typography>
+            </Button>
+          </Link>
+        </div>
       </div>
     </aside>
   );
